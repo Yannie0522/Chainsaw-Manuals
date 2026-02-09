@@ -4,59 +4,189 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>机器分解图下载中心</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- PDF.js 核心CSS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf_viewer.min.css">
     <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
+        /* 基础样式 */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
         body {
             font-family: "Microsoft YaHei", Arial, sans-serif;
             line-height: 1.6;
             color: #333;
-            background: #f5f5f5;
+            background-color: #f5f5f5;
             padding: 20px;
             max-width: 1200px;
             margin: 0 auto;
         }
+        
         .header {
             text-align: center;
-            margin: 30px 0;
+            margin-bottom: 40px;
             padding: 30px;
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             color: white;
             border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
         }
-        .header h1 { font-size: 2.5rem; margin-bottom: 10px; }
+        
+        .header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+        }
+        
+        .header p {
+            font-size: 1.1rem;
+            opacity: 0.9;
+        }
+        
+        .search-box {
+            margin: 20px 0 40px;
+            text-align: center;
+        }
+        
+        .search-box input {
+            width: 100%;
+            max-width: 500px;
+            padding: 12px 20px;
+            border: 2px solid #ddd;
+            border-radius: 25px;
+            font-size: 1rem;
+            outline: none;
+            transition: border-color 0.3s;
+        }
+        
+        .search-box input:focus {
+            border-color: #3498db;
+        }
+        
         .category {
             background: white;
             border-radius: 10px;
             padding: 25px;
             margin-bottom: 30px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
         }
+        
         .category h2 {
             color: #2c3e50;
             border-left: 5px solid #3498db;
             padding-left: 15px;
             margin-bottom: 20px;
+            font-size: 1.8rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
         }
+        
+        .machine-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+        }
+        
         .machine-item {
             background: #f8f9fa;
             border: 1px solid #e9ecef;
             border-radius: 8px;
             padding: 20px;
+            transition: all 0.3s ease;
+        }
+        
+        .machine-item:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            border-color: #3498db;
+        }
+        
+        .machine-item h3 {
+            color: #2c3e50;
+            margin-bottom: 10px;
+            font-size: 1.3rem;
+        }
+        
+        .machine-meta {
+            color: #666;
+            font-size: 0.9rem;
             margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 1px dashed #ddd;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
         }
+        
+        .machine-meta span {
+            background: #e9ecef;
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-size: 0.85rem;
+        }
+        
+        .machine-desc {
+            margin-bottom: 20px;
+            color: #555;
+            line-height: 1.5;
+        }
+        
+        .action-buttons {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+        
         .btn {
-            display: inline-block;
-            padding: 10px 20px;
-            margin: 5px;
-            border-radius: 5px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 10px 16px;
+            border-radius: 6px;
             text-decoration: none;
-            color: white;
-            font-weight: bold;
+            font-weight: 500;
+            font-size: 0.95rem;
+            transition: all 0.2s;
+            border: none;
+            cursor: pointer;
+            gap: 8px;
+            flex: 1;
+            min-width: 120px;
         }
-        .btn-download { background: #27ae60; }
-        .btn-download:hover { background: #219653; }
-        .btn-contact { background: #e74c3c; }
-        .btn-contact:hover { background: #c0392b; }
+        
+        .btn-download {
+            background: #27ae60;
+            color: white;
+        }
+        
+        .btn-download:hover {
+            background: #219653;
+            transform: translateY(-2px);
+        }
+        
+        .btn-preview {
+            background: #3498db;
+            color: white;
+        }
+        
+        .btn-preview:hover {
+            background: #2980b9;
+            transform: translateY(-2px);
+        }
+        
+        .btn-contact {
+            background: #e74c3c;
+            color: white;
+        }
+        
+        .btn-contact:hover {
+            background: #c0392b;
+            transform: translateY(-2px);
+        }
+        
         .footer {
             text-align: center;
             margin-top: 50px;
@@ -64,90 +194,746 @@
             color: #666;
             border-top: 1px solid #eee;
         }
+        
+        .stats {
+            font-size: 0.9rem;
+            margin-top: 10px;
+            color: #888;
+        }
+        
+        /* PDF预览模态框样式 */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.8);
+        }
+        
+        .modal-content {
+            background-color: white;
+            margin: 2% auto;
+            padding: 0;
+            border-radius: 10px;
+            width: 95%;
+            height: 95%;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            box-shadow: 0 5px 30px rgba(0, 0, 0, 0.3);
+        }
+        
+        .modal-header {
+            padding: 15px 20px;
+            background: #2c3e50;
+            color: white;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-shrink: 0;
+        }
+        
+        .modal-header h3 {
+            margin: 0;
+            font-size: 1.2rem;
+            flex: 1;
+        }
+        
+        .modal-controls {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .modal-controls button {
+            background: rgba(255, 255, 255, 0.2);
+            border: none;
+            color: white;
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background 0.3s;
+        }
+        
+        .modal-controls button:hover {
+            background: rgba(255, 255, 255, 0.3);
+        }
+        
+        .close-btn {
+            background: rgba(255, 255, 255, 0.2);
+            border: none;
+            color: white;
+            font-size: 1.5rem;
+            cursor: pointer;
+            padding: 0;
+            width: 36px;
+            height: 36px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            transition: background 0.3s;
+        }
+        
+        .close-btn:hover {
+            background: rgba(255, 255, 255, 0.3);
+        }
+        
+        .modal-body {
+            flex: 1;
+            padding: 0;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        /* PDF.js 查看器容器 */
+        #pdf-viewer-container {
+            flex: 1;
+            overflow: auto;
+            position: relative;
+        }
+        
+        /* PDF.js 画布容器 */
+        #pdf-canvas-container {
+            text-align: center;
+            padding: 20px;
+        }
+        
+        .pdf-page-canvas {
+            margin: 10px auto;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            border: 1px solid #ddd;
+        }
+        
+        /* PDF.js 工具栏 */
+        .pdf-toolbar {
+            background: #f8f9fa;
+            padding: 10px 20px;
+            border-bottom: 1px solid #e9ecef;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+        
+        .page-controls {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .zoom-controls {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .toolbar-btn {
+            background: white;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            padding: 6px 12px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            transition: all 0.2s;
+        }
+        
+        .toolbar-btn:hover {
+            background: #f0f0f0;
+            border-color: #3498db;
+        }
+        
+        .page-input {
+            width: 60px;
+            padding: 6px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            text-align: center;
+        }
+        
+        .loading {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100%;
+            font-size: 1.2rem;
+            color: #666;
+            flex-direction: column;
+            gap: 15px;
+        }
+        
+        .loading i {
+            animation: spin 1s linear infinite;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        .progress-bar {
+            width: 200px;
+            height: 4px;
+            background: #e0e0e0;
+            border-radius: 2px;
+            overflow: hidden;
+        }
+        
+        .progress-fill {
+            height: 100%;
+            background: #3498db;
+            width: 0%;
+            transition: width 0.3s;
+        }
+        
+        /* 响应式设计 */
+        @media (max-width: 768px) {
+            .machine-list {
+                grid-template-columns: 1fr;
+            }
+            
+            .header h1 {
+                font-size: 2rem;
+            }
+            
+            .action-buttons {
+                flex-direction: column;
+            }
+            
+            .btn {
+                width: 100%;
+                justify-content: center;
+            }
+            
+            .modal-content {
+                width: 98%;
+                height: 98%;
+                margin: 1% auto;
+            }
+            
+            .pdf-toolbar {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            
+            .page-controls, .zoom-controls {
+                justify-content: center;
+            }
+        }
+        
+        /* 分类图标 */
+        .category-icon {
+            font-size: 1.5rem;
+        }
+        
+        /* 下载计数 */
+        .download-count {
+            display: inline-block;
+            background: #e74c3c;
+            color: white;
+            font-size: 0.8rem;
+            padding: 2px 8px;
+            border-radius: 10px;
+            margin-left: 5px;
+            vertical-align: middle;
+        }
+        
+        /* 错误提示 */
+        .error-message {
+            text-align: center;
+            padding: 40px;
+            color: #e74c3c;
+        }
+        
+        .error-message i {
+            font-size: 3rem;
+            margin-bottom: 20px;
+        }
     </style>
 </head>
 <body>
+    <!-- 网站头部 -->
     <div class="header">
-        <h1>🔧 机器分解图下载中心</h1>
-        <p>提供油锯、割灌机、吹风机等设备的详细分解图</p>
+        <h1><i class="fas fa-tools"></i> 机器分解图下载中心</h1>
+        <p>提供油锯、割灌机、吹风机等设备的详细分解图和技术文档</p>
+    </div>
+    
+    <!-- 搜索框 -->
+    <div class="search-box">
+        <input type="text" id="searchInput" placeholder="搜索机器型号或关键词..." onkeyup="searchMachines()">
     </div>
     
     <!-- 油锯分类 -->
     <div class="category">
-        <h2>🪚 油锯 (Chainsaws)</h2>
-        
-        <div class="machine-item">
-            <h3>GSH560</h3>
-            <p><strong>版本：</strong>v2.1 | <strong>更新：</strong>2026-02-03 | <strong>大小：</strong>4.2MB</p>
-            <p>专业级油锯，适用于中等强度作业</p>
-            <div>
-                <!-- Yannie0522 -->
-                <a href="https://raw.githubusercontent.com/Yannie0522/Chainsaw-Manuals/main/Chainsaw/GSH560%202026.02.pdf" 
-                   class="btn btn-download" 
-                   download="GSH560%2026.02.pdf">
-                    ⬇️ 下载PDF
-                </a>
-                <a href="weixin://" class="btn btn-contact">
-                    💬 联系询价
-                </a>
+        <h2><i class="fas fa-tree category-icon"></i> 油锯 (Chainsaws)</h2>
+        <div class="machine-list" id="chainsaws-list">
+            <!-- 示例项目1 -->
+            <div class="machine-item" data-name="STIHL MS 250" data-category="油锯">
+                <h3>STIHL MS 250 <span class="download-count" id="count-STIHL-MS250">0</span></h3>
+                <div class="machine-meta">
+                    <span><i class="fas fa-tag"></i> 版本：v2.1</span>
+                    <span><i class="fas fa-calendar-alt"></i> 更新：2024-01-15</span>
+                    <span><i class="fas fa-file-pdf"></i> 大小：4.2MB</span>
+                </div>
+                <p class="machine-desc">专业级油锯，适用于中等强度作业，发动机排量45.4cc，导板长度16英寸。</p>
+                <div class="action-buttons">
+                    <button class="btn btn-download" onclick="downloadFile('STIHL-MS250.pdf', 'STIHL-MS250_分解图.pdf')">
+                        <i class="fas fa-download"></i> 下载PDF
+                    </button>
+                    <button class="btn btn-preview" onclick="openPreview('STIHL-MS250.pdf', 'STIHL MS 250 分解图')">
+                        <i class="fas fa-eye"></i> 在线预览
+                    </button>
+                </div>
             </div>
-        </div>
-        
-        <div class="machine-item">
-            <h3>GS650</h3>
-            <p><strong>版本：</strong>v1.8 | <strong>更新：</strong>2023-12-10 | <strong>大小：</strong>3.8MB</p>
-            <p>农场专用油锯，动力强劲耐用</p>
-            <div>
-                <a href="https://raw.githubusercontent.com/Yannie0522/Chainsaw-Manuals/main/Chainsaw/GS650%202023.03.pdf" 
-                   class="btn btn-download" 
-                   download="GS650%2023.06.pdf">
-                    ⬇️ 下载PDF
-                </a>
-                <a href="weixin://" class="btn btn-contact">
-                    💬 联系询价
-                </a>
+            
+            <!-- 示例项目2 -->
+            <div class="machine-item" data-name="HUSQVARNA 455 Rancher" data-category="油锯">
+                <h3>HUSQVARNA 455 Rancher <span class="download-count" id="count-HUSQVARNA-455">0</span></h3>
+                <div class="machine-meta">
+                    <span><i class="fas fa-tag"></i> 版本：v1.8</span>
+                    <span><i class="fas fa-calendar-alt"></i> 更新：2023-12-10</span>
+                    <span><i class="fas fa-file-pdf"></i> 大小：3.8MB</span>
+                </div>
+                <p class="machine-desc">农场专用油锯，动力强劲耐用，配备智能启动系统和空气净化技术。</p>
+                <div class="action-buttons">
+                    <button class="btn btn-download" onclick="downloadFile('HUSQVARNA-455.pdf', 'HUSQVARNA-455_分解图.pdf')">
+                        <i class="fas fa-download"></i> 下载PDF
+                    </button>
+                    <button class="btn btn-preview" onclick="openPreview('HUSQVARNA-455.pdf', 'HUSQVARNA 455 Rancher 分解图')">
+                        <i class="fas fa-eye"></i> 在线预览
+                    </button>
+                </div>
+            </div>
+            
+            <!-- 示例项目3 -->
+            <div class="machine-item" data-name="MAKITA EA4300F40B" data-category="油锯">
+                <h3>MAKITA EA4300F40B <span class="download-count" id="count-MAKITA-EA4300">0</span></h3>
+                <div class="machine-meta">
+                    <span><i class="fas fa-tag"></i> 版本：v1.2</span>
+                    <span><i class="fas fa-calendar-alt"></i> 更新：2024-01-05</span>
+                    <span><i class="fas fa-file-pdf"></i> 大小：3.5MB</span>
+                </div>
+                <p class="machine-desc">轻型专业油锯，低振动设计，适合长时间作业，导板长度40cm。</p>
+                <div class="action-buttons">
+                    <button class="btn btn-download" onclick="downloadFile('MAKITA-EA4300.pdf', 'MAKITA-EA4300_分解图.pdf')">
+                        <i class="fas fa-download"></i> 下载PDF
+                    </button>
+                    <button class="btn btn-preview" onclick="openPreview('MAKITA-EA4300.pdf', 'MAKITA EA4300F40B 分解图')">
+                        <i class="fas fa-eye"></i> 在线预览
+                    </button>
+                </div>
             </div>
         </div>
     </div>
     
     <!-- 割灌机分类 -->
     <div class="category">
-        <h2>🌿 割灌机 (Brush Cutters)</h2>
-        
-        <div class="machine-item">
-            <h3>GSH560</h3>
-            <p><strong>版本：</strong>v1.5 | <strong>更新：</strong>2024-01-10 | <strong>大小：</strong>3.5MB</p>
-            <p>轻型割灌机，操作灵活方便</p>
-            <div>
-                <a href="https://raw.githubusercontent.com/Yannie0522/Chainsaw-Manuals/main/Chainsaw/GSH560%202026.02.pdf" 
-                   class="btn btn-download" 
-                   download="GSH560&2026.02.pdf">
-                    ⬇️ 下载PDF
-                </a>
-                <a href="weixin://" class="btn btn-contact">
-                    💬 联系询价
-                </a>
+        <h2><i class="fas fa-leaf category-icon"></i> 割灌机 (Brush Cutters)</h2>
+        <div class="machine-list" id="brushcutters-list">
+            <!-- 示例项目 -->
+            <div class="machine-item" data-name="ECHO SRM-2620" data-category="割灌机">
+                <h3>ECHO SRM-2620 <span class="download-count" id="count-ECHO-SRM2620">0</span></h3>
+                <div class="machine-meta">
+                    <span><i class="fas fa-tag"></i> 版本：v1.5</span>
+                    <span><i class="fas fa-calendar-alt"></i> 更新：2024-01-10</span>
+                    <span><i class="fas fa-file-pdf"></i> 大小：3.5MB</span>
+                </div>
+                <p class="machine-desc">轻型割灌机，操作灵活方便，配备可调节背带和防振手柄。</p>
+                <div class="action-buttons">
+                    <button class="btn btn-download" onclick="downloadFile('ECHO-SRM2620.pdf', 'ECHO-SRM2620_分解图.pdf')">
+                        <i class="fas fa-download"></i> 下载PDF
+                    </button>
+                    <button class="btn btn-preview" onclick="openPreview('ECHO-SRM2620.pdf', 'ECHO SRM-2620 分解图')">
+                        <i class="fas fa-eye"></i> 在线预览
+                    </button>
+                </div>
+            </div>
+            
+            <!-- 示例项目2 -->
+            <div class="machine-item" data-name="STIHL FS 240" data-category="割灌机">
+                <h3>STIHL FS 240 <span class="download-count" id="count-STIHL-FS240">0</span></h3>
+                <div class="machine-meta">
+                    <span><i class="fas fa-tag"></i> 版本：v1.3</span>
+                    <span><i class="fas fa-calendar-alt"></i> 更新：2023-11-20</span>
+                    <span><i class="fas fa-file-pdf"></i> 大小：3.1MB</span>
+                </div>
+                <p class="machine-desc">多功能割灌机，可更换多种刀头，适用于不同植被清理工作。</p>
+                <div class="action-buttons">
+                    <button class="btn btn-download" onclick="downloadFile('STIHL-FS240.pdf', 'STIHL-FS240_分解图.pdf')">
+                        <i class="fas fa-download"></i> 下载PDF
+                    </button>
+                    <button class="btn btn-preview" onclick="openPreview('STIHL-FS240.pdf', 'STIHL FS 240 分解图')">
+                        <i class="fas fa-eye"></i> 在线预览
+                    </button>
+                </div>
             </div>
         </div>
     </div>
     
+    <!-- 吹风机分类 -->
+    <div class="category">
+        <h2><i class="fas fa-wind category-icon"></i> 吹风机 (Blowers)</h2>
+        <div class="machine-list" id="blowers-list">
+            <!-- 示例项目 -->
+            <div class="machine-item" data-name="STIHL BR 600" data-category="吹风机">
+                <h3>STIHL BR 600 <span class="download-count" id="count-STIHL-BR600">0</span></h3>
+                <div class="machine-meta">
+                    <span><i class="fas fa-tag"></i> 版本：v2.0</span>
+                    <span><i class="fas fa-calendar-alt"></i> 更新：2024-01-05</span>
+                    <span><i class="fas fa-file-pdf"></i> 大小：3.2MB</span>
+                </div>
+                <p class="machine-desc">大功率吹风机，适用于大面积清理，风速可达300km/h。</p>
+                <div class="action-buttons">
+                    <button class="btn btn-download" onclick="downloadFile('STIHL-BR600.pdf', 'STIHL-BR600_分解图.pdf')">
+                        <i class="fas fa-download"></i> 下载PDF
+                    </button>
+                    <button class="btn btn-preview" onclick="openPreview('STIHL-BR600.pdf', 'STIHL BR 600 分解图')">
+                        <i class="fas fa-eye"></i> 在线预览
+                    </button>
+                </div>
+            </div>
+            
+            <!-- 示例项目2 -->
+            <div class="machine-item" data-name="HUSQVARNA 150BT" data-category="吹风机">
+                <h3>HUSQVARNA 150BT <span class="download-count" id="count-HUSQVARNA-150BT">0</span></h3>
+                <div class="machine-meta">
+                    <span><i class="fas fa-tag"></i> 版本：v1.1</span>
+                    <span><i class="fas fa-calendar-alt"></i> 更新：2023-12-15</span>
+                    <span><i class="fas fa-file-pdf"></i> 大小：2.8MB</span>
+                </div>
+                <p class="machine-desc">背包式吹风机，续航时间长，适合园林维护和道路清理。</p>
+                <div class="action-buttons">
+                    <button class="btn btn-download" onclick="downloadFile('HUSQVARNA-150BT.pdf', 'HUSQVARNA-150BT_分解图.pdf')">
+                        <i class="fas fa-download"></i> 下载PDF
+                    </button>
+                    <button class="btn btn-preview" onclick="openPreview('HUSQVARNA-150BT.pdf', 'HUSQVARNA 150BT 分解图')">
+                        <i class="fas fa-eye"></i> 在线预览
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- 网站页脚 -->
     <div class="footer">
-        <p>© 2024 机器分解图中心 | 如有问题请联系客服</p>
-        <p>最后更新：<span id="lastUpdate">2024-01-15</span></p>
+        <p>© 2024 机器分解图中心 | 本网站已服务 <span id="totalVisits">0</span> 位用户</p>
+        <p>最后更新：<span id="lastUpdate">2024-01-15</span> | 今日下载：<span id="todayDownloads">0</span> 次</p>
+        <div class="stats">
+            <p>总访问量: <span id="totalPageviews">0</span> | 总下载量: <span id="totalDownloads">0</span></p>
+        </div>
+    </div>
+    
+    <!-- PDF预览模态框 -->
+    <div id="pdfModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 id="modalTitle">PDF预览</h3>
+                <div class="modal-controls">
+                    <button id="prevPage" title="上一页">
+                        <i class="fas fa-chevron-left"></i>
+                    </button>
+                    <span id="pageInfo">第 <span id="currentPage">1</span> 页 / 共 <span id="totalPages">?</span> 页</span>
+                    <button id="nextPage" title="下一页">
+                        <i class="fas fa-chevron-right"></i>
+                    </button>
+                    <button id="zoomOut" title="缩小">
+                        <i class="fas fa-search-minus"></i>
+                    </button>
+                    <span id="zoomLevel">100%</span>
+                    <button id="zoomIn" title="放大">
+                        <i class="fas fa-search-plus"></i>
+                    </button>
+                    <button id="downloadPdf" title="下载PDF">
+                        <i class="fas fa-download"></i>
+                    </button>
+                    <button class="close-btn" onclick="closePreview()" title="关闭">
+                        &times;
+                    </button>
+                </div>
+            </div>
+            
+            <div class="pdf-toolbar">
+                <div class="page-controls">
+                    <button id="firstPage" class="toolbar-btn">
+                        <i class="fas fa-fast-backward"></i> 首页
+                    </button>
+                    <button id="prevPageBtn" class="toolbar-btn">
+                        <i class="fas fa-step-backward"></i> 上一页
+                    </button>
+                    <input type="number" id="pageInput" class="page-input" min="1" value="1">
+                    <span>/ <span id="totalPagesDisplay">?</span></span>
+                    <button id="nextPageBtn" class="toolbar-btn">
+                        <i class="fas fa-step-forward"></i> 下一页
+                    </button>
+                    <button id="lastPage" class="toolbar-btn">
+                        <i class="fas fa-fast-forward"></i> 末页
+                    </button>
+                </div>
+                
+                <div class="zoom-controls">
+                    <button id="zoomOutBtn" class="toolbar-btn">
+                        <i class="fas fa-search-minus"></i> 缩小
+                    </button>
+                    <select id="zoomSelect" class="toolbar-btn">
+                        <option value="0.5">50%</option>
+                        <option value="0.75">75%</option>
+                        <option value="1" selected>100%</option>
+                        <option value="1.25">125%</option>
+                        <option value="1.5">150%</option>
+                        <option value="2">200%</option>
+                        <option value="3">300%</option>
+                    </select>
+                    <button id="zoomInBtn" class="toolbar-btn">
+                        <i class="fas fa-search-plus"></i> 放大
+                    </button>
+                    <button id="fitWidth" class="toolbar-btn">
+                        <i class="fas fa-arrows-alt-h"></i> 适应宽度
+                    </button>
+                    <button id="fitPage" class="toolbar-btn">
+                        <i class="fas fa-expand"></i> 适应页面
+                    </button>
+                </div>
+            </div>
+            
+            <div class="modal-body">
+                <div class="loading" id="loadingIndicator">
+                    <i class="fas fa-spinner"></i>
+                    <div>正在加载PDF文档...</div>
+                    <div class="progress-bar">
+                        <div class="progress-fill" id="progressFill"></div>
+                    </div>
+                </div>
+                
+                <div id="errorMessage" class="error-message" style="display: none;">
+                    <i class="fas fa-exclamation-triangle"></i>
+                    <h3>无法加载PDF文档</h3>
+                    <p>请检查网络连接或文件链接是否正确</p>
+                    <button onclick="retryLoadPdf()" class="btn btn-preview" style="margin-top: 20px;">
+                        <i class="fas fa-redo"></i> 重试加载
+                    </button>
+                </div>
+                
+                <div id="pdf-viewer-container">
+                    <div id="pdf-canvas-container"></div>
+                </div>
+            </div>
+        </div>
     </div>
 
+    <!-- PDF.js 核心库 -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+    
+    <!-- 核心JavaScript代码 -->
     <script>
-        // 更新最后修改时间
-        document.getElementById('lastUpdate').textContent = 
-            new Date().toLocaleDateString('zh-CN');
+        // ========== 配置部分（需要修改）==========
+        // 请将 YOUR_USERNAME 替换为您的GitHub用户名
+        const GITHUB_USERNAME = "Yannie0522"; // 修改这里！
+        const REPO_NAME = "Chainsaw-Manuals";
+        const BRANCH = "main";
+        
+        // PDF文件基础路径（根据您的实际文件结构调整）
+        const PDF_PATHS = {
+            "GS650.pdf": "Chainsaw/GS650%202023.03.pdf",
+            "GSH560.pdf": "Chainsaw/GSH560%202026.02.pdf"
+        };
+        // ========== 配置结束 ==========
+        
+        // PDF.js 相关变量
+        let pdfDoc = null;
+        let currentPage = 1;
+        let pageRendering = false;
+        let pageNumPending = null;
+        let scale = 1.0;
+        let currentPdfUrl = '';
+        let currentPdfTitle = '';
+        
+        // 生成文件URL
+        function getFileUrl(filename) {
+            const filePath = PDF_PATHS[filename];
+            if (!filePath) {
+                console.error("未找到文件路径:", filename);
+                return null;
+            }
             
-        // 替换所有链接中的YOUR_USERNAME
-        document.addEventListener('DOMContentLoaded', function() {
-            const links = document.querySelectorAll('a[href*="Yannie0522"]');
-            links.forEach(link => {
-                link.href = link.href.replace('Yannie0522', 'Yannie0522');
+            // 使用GitHub原生链接
+            return `https://raw.githubusercontent.com/${GITHUB_USERNAME}/${REPO_NAME}/${BRANCH}/${filePath}`;
+        }
+        
+        // ========== PDF.js 预览功能 ==========
+        function openPreview(filename, title) {
+            const fileUrl = getFileUrl(filename);
+            if (!fileUrl) {
+                alert("无法找到文件: " + filename);
+                return;
+            }
+            
+            currentPdfUrl = fileUrl;
+            currentPdfTitle = title;
+            
+            // 设置模态框标题
+            document.getElementById('modalTitle').textContent = title;
+            
+            // 显示加载指示器
+            document.getElementById('loadingIndicator').style.display = 'flex';
+            document.getElementById('errorMessage').style.display = 'none';
+            document.getElementById('pdf-viewer-container').style.display = 'none';
+            
+            // 显示模态框
+            document.getElementById('pdfModal').style.display = 'block';
+            
+            // 防止body滚动
+            document.body.style.overflow = 'hidden';
+            
+            // 加载PDF文档
+            loadPdfDocument(fileUrl);
+        }
+        
+        function loadPdfDocument(url) {
+            // 重置状态
+            pdfDoc = null;
+            currentPage = 1;
+            scale = 1.0;
+            
+            // 清空画布容器
+            document.getElementById('pdf-canvas-container').innerHTML = '';
+            
+            // 配置PDF.js工作线程
+            pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+            
+            // 显示加载进度
+            updateProgress(0);
+            
+            // 加载PDF文档
+            const loadingTask = pdfjsLib.getDocument({
+                url: url,
+                withCredentials: false
             });
-        });
-    </script>
-</body>
-</html>
+            
+            loadingTask.promise.then(function(pdf) {
+                pdfDoc = pdf;
+                
+                // 更新总页数
+                document.getElementById('totalPages').textContent = pdf.numPages;
+                document.getElementById('totalPagesDisplay').textContent = pdf.numPages;
+                
+                // 隐藏加载指示器
+                document.getElementById('loadingIndicator').style.display = 'none';
+                document.getElementById('pdf-viewer-container').style.display = 'block';
+                
+                // 渲染第一页
+                renderPage(currentPage);
+                
+                // 设置下载按钮事件
+                document.getElementById('downloadPdf').onclick = function() {
+                    downloadFileFromPreview(currentPdfUrl, currentPdfTitle + '.pdf');
+                };
+                
+            }).catch(function(error) {
+                console.error('PDF加载错误:', error);
+                
+                // 显示错误信息
+                document.getElementById('loadingIndicator').style.display = 'none';
+                document.getElementById('errorMessage').style.display = 'block';
+            });
+            
+            // 监听加载进度
+            loadingTask.onProgress = function(progressData) {
+                const percent = Math.round((progressData.loaded / progressData.total) * 100);
+                updateProgress(percent);
+            };
+        }
+        
+        function retryLoadPdf() {
+            document.getElementById('loadingIndicator').style.display = 'flex';
+            document.getElementById('errorMessage').style.display = 'none';
+            loadPdfDocument(currentPdfUrl);
+        }
+        
+        function updateProgress(percent) {
+            document.getElementById('progressFill').style.width = percent + '%';
+        }
+        
+        function renderPage(num) {
+            pageRendering = true;
+            
+            // 获取页面
+            pdfDoc.getPage(num).then(function(page) {
+                const viewport = page.getViewport({ scale: scale });
+                const canvas = document.createElement('canvas');
+                const ctx = canvas.getContext('2d');
+                
+                // 设置画布尺寸
+                canvas.height = viewport.height;
+                canvas.width = viewport.width;
+                canvas.className = 'pdf-page-canvas';
+                
+                // 清空容器并添加画布
+                const container = document.getElementById('pdf-canvas-container');
+                container.innerHTML = '';
+                container.appendChild(canvas);
+                
+                // 渲染页面
+                const renderContext = {
+                    canvasContext: ctx,
+                    viewport: viewport
+                };
+                
+                const renderTask = page.render(renderContext);
+                
+                renderTask.promise.then(function() {
+                    pageRendering = false;
+                    
+                    // 更新页面信息
+                    document.getElementById('currentPage').textContent = num;
+                    document.getElementById('pageInput').value = num;
+                    
+                    // 如果有等待的页面，渲染它
+                    if (pageNumPending !== null) {
+                        renderPage(pageNumPending);
+                        pageNumPending = null;
+                    }
+                });
+                
+            }).catch(function(error) {
+                console.error('页面渲染错误:', error);
+                pageRendering = false;
+            });
+        }
+        
+        function queueRenderPage(num) {
+            if (pageRendering) {
+                pageNumPending = num;
+            } else {
+                renderPage(num);
+            }
+        }
+        
+        function onPrevPage() {
+            if (currentPage <= 1) {
+                return;
+            }
+            currentPage--;
+            queueRenderPage(currentPage);
+        }
+        
+        function onNextPage() {
+            if (currentPage >= pdfDoc.numPages) {
+                return;
+            }
+            currentPage++;
+            queueRenderPage(currentPage);
+        }
+        
+        function goToPage(pageNum) {
+            if (pageNum < 1 || pageNum > 
