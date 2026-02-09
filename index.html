@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>机器分解图下载中心</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: "Microsoft YaHei", Arial, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: #f5f5f5;
+            padding: 20px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        .header {
+            text-align: center;
+            margin: 30px 0;
+            padding: 30px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border-radius: 10px;
+        }
+        .header h1 { font-size: 2.5rem; margin-bottom: 10px; }
+        .category {
+            background: white;
+            border-radius: 10px;
+            padding: 25px;
+            margin-bottom: 30px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+        }
+        .category h2 {
+            color: #2c3e50;
+            border-left: 5px solid #3498db;
+            padding-left: 15px;
+            margin-bottom: 20px;
+        }
+        .machine-item {
+            background: #f8f9fa;
+            border: 1px solid #e9ecef;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 15px;
+        }
+        .btn {
+            display: inline-block;
+            padding: 10px 20px;
+            margin: 5px;
+            border-radius: 5px;
+            text-decoration: none;
+            color: white;
+            font-weight: bold;
+        }
+        .btn-download { background: #27ae60; }
+        .btn-download:hover { background: #219653; }
+        .btn-contact { background: #e74c3c; }
+        .btn-contact:hover { background: #c0392b; }
+        .footer {
+            text-align: center;
+            margin-top: 50px;
+            padding: 20px;
+            color: #666;
+            border-top: 1px solid #eee;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>🔧 机器分解图下载中心</h1>
+        <p>提供油锯、割灌机、吹风机等设备的详细分解图</p>
+    </div>
+    
+    <!-- 油锯分类 -->
+    <div class="category">
+        <h2>🪚 油锯 (Chainsaws)</h2>
+        
+        <div class="machine-item">
+            <h3>GSH560</h3>
+            <p><strong>版本：</strong>v2.1 | <strong>更新：</strong>2026-02-03 | <strong>大小：</strong>4.2MB</p>
+            <p>专业级油锯，适用于中等强度作业</p>
+            <div>
+                <!-- Yannie0522 -->
+                <a href="https://cdn.jsdelivr.net/gh/Yannie0522/Chainsaw-Manuals@main/Chainsaw/GSH560%2026.02.pdf" 
+                   class="btn btn-download" 
+                   download="GSH560%2026.02.pdf">
+                    ⬇️ 下载PDF
+                </a>
+                <a href="weixin://" class="btn btn-contact">
+                    💬 联系询价
+                </a>
+            </div>
+        </div>
+        
+        <div class="machine-item">
+            <h3>GS650</h3>
+            <p><strong>版本：</strong>v1.8 | <strong>更新：</strong>2023-12-10 | <strong>大小：</strong>3.8MB</p>
+            <p>农场专用油锯，动力强劲耐用</p>
+            <div>
+                <a href="https://cdn.jsdelivr.net/gh/Yannie0522/Chainsaw-Manuals@main/Chainsaw/GS650%2023.06.pdf" 
+                   class="btn btn-download" 
+                   download="GS650%2023.06.pdf">
+                    ⬇️ 下载PDF
+                </a>
+                <a href="weixin://" class="btn btn-contact">
+                    💬 联系询价
+                </a>
+            </div>
+        </div>
+    </div>
+    
+    <!-- 割灌机分类 -->
+    <div class="category">
+        <h2>🌿 割灌机 (Brush Cutters)</h2>
+        
+        <div class="machine-item">
+            <h3>GSH560</h3>
+            <p><strong>版本：</strong>v1.5 | <strong>更新：</strong>2024-01-10 | <strong>大小：</strong>3.5MB</p>
+            <p>轻型割灌机，操作灵活方便</p>
+            <div>
+                <a href="https://cdn.jsdelivr.net/gh/Yannie0522/Chainsaw-Manuals@main/Chainsaw/GSH560%2026.02.pdf" 
+                   class="btn btn-download" 
+                   download="GSH560&2026.02.pdf">
+                    ⬇️ 下载PDF
+                </a>
+                <a href="weixin://" class="btn btn-contact">
+                    💬 联系询价
+                </a>
+            </div>
+        </div>
+    </div>
+    
+    <div class="footer">
+        <p>© 2024 机器分解图中心 | 如有问题请联系客服</p>
+        <p>最后更新：<span id="lastUpdate">2024-01-15</span></p>
+    </div>
+
+    <script>
+        // 更新最后修改时间
+        document.getElementById('lastUpdate').textContent = 
+            new Date().toLocaleDateString('zh-CN');
+            
+        // 替换所有链接中的YOUR_USERNAME
+        document.addEventListener('DOMContentLoaded', function() {
+            const links = document.querySelectorAll('a[href*="Yannie0522"]');
+            links.forEach(link => {
+                link.href = link.href.replace('Yannie0522', 'Yannie0522');
+            });
+        });
+    </script>
+</body>
+</html>
